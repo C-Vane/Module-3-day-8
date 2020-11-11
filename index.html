@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <title>Amazon Home page</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+            div.card img {
+                max-height: 150px;
+                width: auto;
+
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <body>
+            <div class=" navbar-dark bg-dark">
+                <nav class="navbar navbar-expand-lg container">
+                    <div class="navbar-brand" href="#"><img src="/img/amazon-com-light-logo-svg-vector.svg"
+                            height="30px" alt="logo" srcset=""></div>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="index.html">Home <span
+                                        class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <p class="nav-link dropdown-toggle m-0" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false"><i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                    Shopping Cart</p>
+                                <div class="dropdown-menu" aria-labelledby="dropdownId">
+                                    <div class="dropdown-item d-flex justify-content-around">
+                                        <div class="d-flex justify-content-between">
+                                            <h4>Total: €</h4>
+                                            <h4> 0.00 </h4>
+                                            <button type="button" class="btn btn-outline-success w-25">BUY </button>
+                                            <button type="button" class="btn btn w-25" onclick="removeAll()"> Clean Cart
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="navbar-nav">
+                            <a class="btn btn-dark" href="supplierLogIN.html">Supplier log in</a>
+                        </div>
+
+                    </div>
+                </nav>
+
+            </div>
+            <div class="container p-5">
+                <h1>Available products</h1>
+
+                <div id="products" class="row row-cols-1 row-cols-md-3">
+
+                </div>
+
+            </div>
+
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                crossorigin="anonymous"></script>
+            <script src="/script.js"></script>
+        </body>
+
+</html>
+
+<!--
+          
+            You are building the new Amazon.
+            This time you are also responsible for the back office.
+            THIS is you CRUD endpoint
+            https://striveschool-api.herokuapp.com/api/product/
+            The product model is 
+            {
+                "_id": "5d318e1a8541744830bef139", //SERVER GENERATED
+                "name": "app test 1",  //REQUIRED
+                "description": "somthing longer", //REQUIRED
+                "brand": "nokia", //REQUIRED
+                "imageUrl": "https://drop.ndtv.com/TECH/product_database/images/2152017124957PM_635_nokia_3310.jpeg?downsize=*:420&output-quality=80", //REQUIRED
+                "price": 100, //REQUIRED
+                "userId": "admin", //SERVER GENERATED
+                "createdAt": "2019-07-19T09:32:10.535Z", //SERVER GENERATED
+                "updatedAt": "2019-07-19T09:32:10.535Z", //SERVER GENERATED
+                "__v": 0 //SERVER GENERATED
+            }
+            #---------------------------------------------------------------#
+            EVERY REST API CALL SHOULD BE AUTHENTICATED. 
+            Every request to the API should use Token Based Authentication to secure access to the contents.
+            You can get your token by registering on: strive.school/studentlogin
+            Authorization: Bearer ###########
+            Where ######### is the access_token returned by the endpoint.
+            #---------------------------------------------------------------#
+            Today you have to implement:
+            - A backoffice page, where you can insert the product by specifying the parameters
+            - A front page, where the user can see the available products
+            ------ N.B. ------
+            Tokens duration is set to 14 days. Whenever you'll need to obtain a new one you can send the following request:
+            
+            POST https://striveschool-api.herokuapp.com/api/account/login
+            {
+                "username": "testusername@yourmail.com",
+                "password":"pass"
+            }   
+        -->

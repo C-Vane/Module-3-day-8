@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Strive Curd Agenda</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous" />
+    </head>
+
+    <body>
+        <div class="navbar-dark bg-dark">
+            <nav class="navbar navbar-expand-lg container">
+                <div class="navbar-brand" href="#"><img src="/img/amazon-com-light-logo-svg-vector.svg" height="30px"
+                        alt="logo" srcset="">
+                </div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="index.html">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <div class="container">
+            <h1 class="text-center">Add products for sale</h1>
+
+            <div class="row">
+                <div class="col col-6 offset-3">
+                    <form onsubmit="handelSubmit(event)">
+                        <div class="from-group">
+                            <label for="name"> Product Name </label>
+                            <input type="text" class="form-control" id="name" placeholder="Write the Product name here"
+                                required />
+                        </div>
+                        <div class="from-group">
+                            <label for="brand"> Brand of the product </label>
+                            <input type="text" class="form-control" id="brand"
+                                placeholder="Write the Product brand here" required />
+                        </div>
+                        <div class="from-group">
+                            <label for="description"> Product Description </label>
+                            <textarea row="3" type="text" class="form-control" id="description"
+                                placeholder="Write the Product description here" required></textarea>
+                        </div>
+                        <div class="from-group">
+                            <label for="image"> Product Image Url </label>
+                            <input type="url" class="form-control" id="image" placeholder="https://example.com/images"
+                                required />
+                        </div>
+                        <div class="from-group">
+                            <label for="price"> Product Price </label>
+                            <input type="number" class="form-control" id="price"
+                                placeholder="Write the Product price here" required />
+                        </div>
+
+                        <div class="from-group">
+                            <button type="submit" class="btn btn-primary">Create Product</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <h2 class="text-center mt-5">Remove products</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Desctiption</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Delete Product</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+        <script>
+            window.onload = async () => {
+                const url = " https://striveschool-api.herokuapp.com/api/product/";
+                let current_event = document.getElementsByTagName("tbody")[0];
+                let response = {};
+                try {
+                    response = await fetch(url, {
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFiYzViNzRiY2RlMTAwMTc2MTZhODkiLCJpYXQiOjE2MDUxMDIzMjAsImV4cCI6MTYwNjMxMTkyMH0.h3FKiwW98JXPE0Ot2gKvKuBP0LN-YSOF0SfMLPbZQU0",
+                        },
+                    });
+                    let events = await response.json();
+                    console.log(response);
+                    if (events.length > 0) {
+                        events.forEach((event) => {
+                            let prod = document.createElement("tr");
+                            const id = event._id;
+                            prod.innerHTML = `
+                        <th scope="row">${event._id}</th>
+                        <td>${event.name}</td>
+                        <td>${event.brand}</td>
+                        <td>${event.description}</td>
+                        <td>${event.price}</td>
+                        <td><button class="btn btn-warning remove" id="${id}">Cancel</button></td>
+                    `;
+                            current_event.appendChild(prod);
+                        });
+                        const removebtn = document.querySelectorAll(".remove");
+                        removebtn.forEach((btn) => btn.addEventListener('click', removeProduct));
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            };
+            const removeProduct = async (event) => {
+                let id = event.target.id;
+                try {
+                    let respose = await fetch(url + id, {
+                        method: "DELETE",
+                        headers: {
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFiYzViNzRiY2RlMTAwMTc2MTZhODkiLCJpYXQiOjE2MDUxMDIzMjAsImV4cCI6MTYwNjMxMTkyMH0.h3FKiwW98JXPE0Ot2gKvKuBP0LN-YSOF0SfMLPbZQU0",
+
+                            "content-type": "application/json",
+                        },
+                    });
+                    if (respose.ok) {
+                        alert("Product deleted!!!");
+                        window.location.reload();
+                    } else alert("There is an error");
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+
+            const url = " https://striveschool-api.herokuapp.com/api/product/";
+            const handelSubmit = async (e) => {
+                e.preventDefault();
+                let myEvent = {
+                    name: document.getElementById("name").value,
+                    description: document.getElementById("description").value,
+                    brand: document.getElementById("brand").value,
+                    imageUrl: document.getElementById("image").value,
+                    price: document.getElementById("price").value,
+                };
+
+                try {
+                    let respose = await fetch(url, {
+                        method: "post",
+                        body: JSON.stringify(myEvent),
+                        headers: new Headers({
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFiYzViNzRiY2RlMTAwMTc2MTZhODkiLCJpYXQiOjE2MDUxMDIzMjAsImV4cCI6MTYwNjMxMTkyMH0.h3FKiwW98JXPE0Ot2gKvKuBP0LN-YSOF0SfMLPbZQU0",
+
+                            "content-type": "application/json",
+                        }),
+                    });
+                    if (respose.ok) {
+                        alert("Product Added!!!");
+                        //window.location.assign("index.html");
+                    } else alert("There is an error");
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+        </script>
+    </body>
+
+</html>
