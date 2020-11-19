@@ -2,7 +2,7 @@
 <html lang="en">
 
     <head>
-        <title>Strive Curd Agenda</title>
+        <title>Back Office</title>
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -66,13 +66,15 @@
                         </div>
 
                         <div class="from-group">
-                            <button type="submit" class="btn btn-primary">Create Product</button>
+                            <button type="submit" class="btn btn-primary mt-3">
+                                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                Create Product</button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <h2 class="text-center mt-5">Remove products</h2>
+            <h2 class="text-center mt-5">Remove and Edit Products</h2>
             <table class="table">
                 <thead>
                     <tr>
@@ -82,6 +84,7 @@
                         <th scope="col">Desctiption</th>
                         <th scope="col">Price</th>
                         <th scope="col">Delete Product</th>
+                        <th scope="col">Edit Product</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -100,9 +103,10 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
         <script>
+            let product;
             window.onload = async () => {
                 const url = " https://striveschool-api.herokuapp.com/api/product/";
-                let current_event = document.getElementsByTagName("tbody")[0];
+                let current_product = document.getElementsByTagName("tbody")[0];
                 let response = {};
                 try {
                     response = await fetch(url, {
@@ -111,24 +115,30 @@
                                 "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFiYzViNzRiY2RlMTAwMTc2MTZhODkiLCJpYXQiOjE2MDUxMDIzMjAsImV4cCI6MTYwNjMxMTkyMH0.h3FKiwW98JXPE0Ot2gKvKuBP0LN-YSOF0SfMLPbZQU0",
                         },
                     });
-                    let events = await response.json();
-                    console.log(response);
-                    if (events.length > 0) {
-                        events.forEach((event) => {
+                    products = await response.json();
+                    //console.log(response);
+                    if (products.length > 0) {
+                        products.forEach((product) => {
                             let prod = document.createElement("tr");
-                            const id = event._id;
+                            const id = product._id;
                             prod.innerHTML = `
-                        <th scope="row">${event._id}</th>
-                        <td>${event.name}</td>
-                        <td>${event.brand}</td>
-                        <td>${event.description}</td>
-                        <td>${event.price}</td>
-                        <td><button class="btn btn-warning remove" id="${id}">Cancel</button></td>
+                        <th scope="row">${product._id}</th>
+                        <td>${product.name}</td>
+                        <td>${product.brand}</td>
+                        <td>${product.description}</td>
+                        <td>${product.price}</td>
+                        <td><button class="btn btn-outline-danger remove" id="${id}">
+                        <span class="spinner-border spinner-border-sm" role="status"></span>
+                        Cancel</button></td>
+                        <td><button class="btn btn-outline-warning edit" id="${id}">
+                        Edit</button> </td>
                     `;
-                            current_event.appendChild(prod);
+                            current_product.appendChild(prod);
                         });
                         const removebtn = document.querySelectorAll(".remove");
                         removebtn.forEach((btn) => btn.addEventListener('click', removeProduct));
+                        const editBtn = document.querySelectorAll(".edit");
+                        editBtn.forEach((btn) => btn.addEventListener('click', editProduct));
                     }
                 } catch (err) {
                     console.log(err);
@@ -136,6 +146,9 @@
             };
             const removeProduct = async (event) => {
                 let id = event.target.id;
+                let spinner = event.target.querySelector(".d-none");
+                console.log(spinner)
+                spinner.classList.toggle(".d-none");
                 try {
                     let respose = await fetch(url + id, {
                         method: "DELETE",
@@ -148,16 +161,36 @@
                     });
                     if (respose.ok) {
                         alert("Product deleted!!!");
+                        spinner.classList.add(".d-none");
                         window.location.reload();
                     } else alert("There is an error");
                 } catch (error) {
                     console.log(error);
                 }
             };
+            let id;
+            const editProduct = async (event) => {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+                const h1 = document.getElementsByTagName("h1")[0];
+                h1.innerText = "Edit Product For sale";
+                const button = document.querySelector("form button");
+                //button.innerText = "Edit Product";
+                id = event.target.id;
+                let edit_product = products.filter((prod) => prod._id === id)[0];
+                document.getElementById("name").value = edit_product.name;
+                document.getElementById("description").value = edit_product.description;
+                document.getElementById("brand").value = edit_product.brand;
+                document.getElementById("image").value = edit_product.imageUrl;
+                document.getElementById("price").value = edit_product.price;
+            }
 
             const url = " https://striveschool-api.herokuapp.com/api/product/";
             const handelSubmit = async (e) => {
                 e.preventDefault();
+                let spinner = e.target.querySelector("button span");
+                console.log(spinner);
+                spinner.classList.toggle(".d-none");
                 let myEvent = {
                     name: document.getElementById("name").value,
                     description: document.getElementById("description").value,
@@ -165,25 +198,50 @@
                     imageUrl: document.getElementById("image").value,
                     price: document.getElementById("price").value,
                 };
+                let response;
+                console.log(myEvent);
+                if (id) {
 
-                try {
-                    let respose = await fetch(url, {
-                        method: "post",
-                        body: JSON.stringify(myEvent),
-                        headers: new Headers({
-                            Authorization:
-                                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFiYzViNzRiY2RlMTAwMTc2MTZhODkiLCJpYXQiOjE2MDUxMDIzMjAsImV4cCI6MTYwNjMxMTkyMH0.h3FKiwW98JXPE0Ot2gKvKuBP0LN-YSOF0SfMLPbZQU0",
+                    try {
+                        respose = await fetch(url + id, {
+                            method: "PUT",
+                            body: JSON.stringify(myEvent),
+                            headers: {
+                                Authorization:
+                                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFiYzViNzRiY2RlMTAwMTc2MTZhODkiLCJpYXQiOjE2MDUxMDIzMjAsImV4cCI6MTYwNjMxMTkyMH0.h3FKiwW98JXPE0Ot2gKvKuBP0LN-YSOF0SfMLPbZQU0",
 
-                            "content-type": "application/json",
-                        }),
-                    });
-                    if (respose.ok) {
-                        alert("Product Added!!!");
-                        //window.location.assign("index.html");
-                    } else alert("There is an error");
-                } catch (error) {
-                    console.log(error);
+                                "content-type": "application/json",
+                            },
+                        });
+                    } catch (error) {
+                        console.log(error);
+                    }
+                } else {
+
+                    try {
+                        respose = await fetch(url, {
+                            method: "post",
+                            body: JSON.stringify(myEvent),
+                            headers: new Headers({
+                                Authorization:
+                                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFiYzViNzRiY2RlMTAwMTc2MTZhODkiLCJpYXQiOjE2MDUxMDIzMjAsImV4cCI6MTYwNjMxMTkyMH0.h3FKiwW98JXPE0Ot2gKvKuBP0LN-YSOF0SfMLPbZQU0",
+
+                                "content-type": "application/json",
+                            }),
+                        });
+
+                    } catch (error) {
+                        console.log(error);
+                    }
                 }
+                if (respose.ok) {
+                    alert(`"Product ${(id) ? "Edited" : "Added"}!!!"`);
+                    spinner.classList.toggle(".d-none");
+                    id = undefined;
+                    location.reload();
+                    //window.location.assign("index.html");
+                } else alert("There is an error");
+
             };
         </script>
     </body>
